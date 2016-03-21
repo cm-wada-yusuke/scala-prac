@@ -28,6 +28,12 @@ object EX31_32_33 {
     println(tail(l))
 
     //EX33
-    
+    println(setHead(10, l))
+
+    //EX34
+    println(drop(l, 3))
+
+    //EX35
+    println(dropWhile(l, (x: Int) => x < 5))
   }
 }

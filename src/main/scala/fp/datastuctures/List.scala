@@ -38,5 +38,33 @@ object List {
     case Nil => Nil
     case Cons(x, y) => y
   }
+
+  /**
+    * EX33. 問の趣旨(matchを使う)から少し外れるかもしれないが、
+    * せっかくなので先のtail関数を使うことにする。
+    *
+    * @param head
+    * @param as
+    * @tparam A
+    * @return
+    */
+  def setHead[A](head: A, as: List[A]): List[A] =
+    Cons(head, tail(as))
+
+
+  def drop[A](l: List[A], n: Int): List[A] =
+    if (n <= 0) l
+    else l match {
+      case Nil => Nil
+      case Cons(x, y) => drop(y, n - 1)
+    }
+
+  def dropWhile[A](l: List[A], f: A => Boolean): List[A] = l match {
+    case Nil => Nil
+    case Cons(x, y) =>
+      if (f(x)) dropWhile(y, f)
+      else l
+  }
+
 }
 
