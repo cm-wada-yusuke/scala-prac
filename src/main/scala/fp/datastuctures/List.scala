@@ -25,5 +25,18 @@ object List {
   def apply[A](as: A*): List[A] =
     if (as.isEmpty) Nil
     else Cons(as.head, apply(as.tail: _*))
+
+
+  /**
+    * EX32. データ構造から考えて、2番目のリストの要素を返せば目的は達成できる。
+    *
+    * @param as
+    * @tparam A
+    * @return
+    */
+  def tail[A](as: List[A]): List[A] = as match {
+    case Nil => Nil
+    case Cons(x, y) => y
+  }
 }
 

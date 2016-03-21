@@ -6,7 +6,7 @@ import fp.datastuctures._
 /**
   * Created by y-wada on 2016/03/21.
   */
-object EX31 {
+object EX31_32_33 {
 
   /**
     * 3つ目にマッチするので1 + 2 で3が返るはず。
@@ -20,6 +20,14 @@ object EX31 {
   }
 
   def main(args: Array[String]) {
+    // EX31
     println(x)
+
+    //EX32
+    val l = List(1, 2, 3, 4, 5)
+    println(tail(l))
+
+    //EX33
+    
   }
 }
