@@ -3,7 +3,7 @@ package fp
 /**
   * Created by y-wada on 2016/03/21.
   */
-object EX23 {
+object EX23_24_25 {
 
   /**
     * ここでは関数の部分適用のためのアンダースコアを用いている。
