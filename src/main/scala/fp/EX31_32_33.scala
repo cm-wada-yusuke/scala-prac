@@ -9,6 +9,7 @@ import fp.datastuctures._
 object EX31_32_33 {
 
   /**
+    * EX31.
     * 3つ目にマッチするので1 + 2 で3が返るはず。
     */
   val x = List(1, 2, 3, 4, 5) match {
@@ -35,5 +36,8 @@ object EX31_32_33 {
 
     //EX35
     println(dropWhile(l, (x: Int) => x < 5))
+
+    //EX36
+    println(init(l))
   }
 }
