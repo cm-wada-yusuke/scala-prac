@@ -6,7 +6,7 @@ import fp.datastuctures._
 /**
   * Created by y-wada on 2016/03/21.
   */
-object EX31_32_33 {
+object EX3_ {
 
   /**
     * EX31.
