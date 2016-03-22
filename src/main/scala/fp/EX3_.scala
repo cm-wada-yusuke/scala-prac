@@ -79,5 +79,12 @@ object EX3_ {
     println("EX38")
     println(length(l))
 
+    //EX311
+    println()
+    println("EX311")
+    println(sumL(l))
+    println(productL(l2))
+    println(lengthL(l))
+
   }
 }
