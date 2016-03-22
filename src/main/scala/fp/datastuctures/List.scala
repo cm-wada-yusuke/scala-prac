@@ -112,13 +112,53 @@ object List {
     * @return
     */
   def init[A](l: List[A]): List[A] = {
-    def loop[A](source: List[A], sink: List[A]): List[A] = source match {
+    def loop(source: List[A], sink: List[A]): List[A] = source match {
       case Nil => Nil
       case Cons(_, Nil) => sink
       case Cons(x, y) => loop(y, append(sink, Cons(x, Nil)))
     }
     loop(l, Nil)
   }
+
+  def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B): B = as match {
+    case Nil => z
+    case Cons(x, xs) => f(x, foldRight(xs, z)(f))
+  }
+
+  def sum2(ns: List[Int]) =
+    foldRight(ns, 0)(_ + _)
+
+  def product2(ns: List[Double]) =
+    foldRight(ns, 1.0)(_ * _)
+
+
+  /**
+    * EX37. foldRightを使って実装されたproductは、0.0を検出した場合に直ちに再帰を中止して0.0を返すことはできない。
+    * 一度すべてのリストが展開されてすべての要素に関数fが適用されるため。
+    * すぐにおもいつくのは、ただちに終了する条件式を関数として指定させ、
+    * 満たさなくなった瞬間停止すること。引数が多くてなんだか美しくない…。
+    */
+  def foldRight2[A, B](as: List[A], z: B)(f: (A, B) => B)(e: B, g: A => Boolean): B = as match {
+    case Nil => z
+    case Cons(x, xs) =>
+      if (g(x)) {
+        println(s"immediately stop! found value: $x")
+        e
+      }
+      else {
+        println(s"continue. found value $x")
+        f(x, foldRight2(xs, z)(f)(e, g))
+      }
+  }
+
+  def product3(ns: List[Double]) =
+    foldRight2(ns, 1.0)(_ * _)(0.0, _ == 0)
+
+  /**
+    * EX39.
+    */
+  def length[A](as: List[A]): Int =
+    foldRight(as, 0)((x, y) => 1 + y)
 
 }
 
