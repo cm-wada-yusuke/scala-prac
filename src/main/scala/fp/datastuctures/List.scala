@@ -187,5 +187,21 @@ object List {
   def appendFold[A](a1: List[A], a2: List[A]): List[A] =
     foldRight(a1, a2)(Cons(_, _))
 
+  /**
+    * EX316.
+    */
+  def addOneEach(l: List[Int]): List[Int] = l match {
+    case Nil => Nil
+    case Cons(x, xs) => Cons(x + 1, addOneEach(xs))
+  }
+
+  /**
+    * EX317.
+    */
+  def doubleToString(l: List[Double]): List[String] = l match {
+    case Nil => Nil
+    case Cons(x, xs) => Cons(x.toString, doubleToString(xs))
+  }
+
 }
 
