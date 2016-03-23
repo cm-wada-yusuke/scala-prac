@@ -184,7 +184,16 @@ object List {
   /**
     * EX312
     */
-  //    def reverse[A](l: List[A]): List[A] =
-  //      foldRight(l, Nil)((x, y) =>
+  def reverse[A](l: List[A]): List[A] =
+    foldRight(l, Nil: List[A])((x, y) => append(y, Cons(x, Nil)))
+
+
+  /**
+    * EX314.
+    * 初期値（つまりNilのかわり）にl2を与える。
+    */
+  def appendFold[A](a1: List[A], a2: List[A]): List[A] =
+    foldRight(a1, a2)(Cons(_, _))
+
 }
 

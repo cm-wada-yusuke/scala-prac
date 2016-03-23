@@ -59,6 +59,7 @@ object EX3_ {
     println(product3(l2))
 
     val l3 = List(1.0, 2.0, 0.0, 4.0, 5.0)
+    println("EX37")
     println(s"$l3")
     println(product3(l3))
 
@@ -86,5 +87,15 @@ object EX3_ {
     println(productL(l2))
     println(lengthL(l))
 
+
+    //EX312
+    println()
+    print("EX312")
+    println(reverse(l))
+
+    //EX314
+    println()
+    print("EX314")
+    println(appendFold(l, l))
   }
 }
