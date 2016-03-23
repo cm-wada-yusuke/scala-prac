@@ -107,17 +107,16 @@ object List {
     * また、引数として与えられたリストのデータを共有することができず、
     * 新しくリストを作成する必要がある。
     *
+    * FIXME: case ( ) if g(x) =>
+    *
     * @param l
     * @tparam A
     * @return
     */
-  def init[A](l: List[A]): List[A] = {
-    def loop(source: List[A], sink: List[A]): List[A] = source match {
-      case Nil => Nil
-      case Cons(_, Nil) => sink
-      case Cons(x, y) => loop(y, append(sink, Cons(x, Nil)))
-    }
-    loop(l, Nil)
+  def init[A](l: List[A]): List[A] = l match {
+    case Nil => Nil
+    case Cons(_, Nil) => Nil
+    case Cons(x, xs) => Cons(x, init(xs))
   }
 
   def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B): B = as match {
@@ -140,15 +139,8 @@ object List {
     */
   def foldRight2[A, B](as: List[A], z: B)(f: (A, B) => B)(e: B, g: A => Boolean): B = as match {
     case Nil => z
-    case Cons(x, xs) =>
-      if (g(x)) {
-        println(s"immediately stop! found value: $x")
-        e
-      }
-      else {
-        println(s"continue. found value $x")
-        f(x, foldRight2(xs, z)(f)(e, g))
-      }
+    case Cons(x, xs) if (g(x)) => println(s"immediately stop! found value: $x"); e
+    case Cons(x, xs) => println(s"continue. found value $x"); f(x, foldRight2(xs, z)(f)(e, g))
   }
 
   def product3(ns: List[Double]) =
