@@ -4,8 +4,8 @@ import fp.datastuctures.List
 import fp.datastuctures.List._
 
 /**
-  * Created by y-wada on 2016/03/24.
-  */
+ * Created by y-wada on 2016/03/24.
+ */
 object EX316 {
 
   def main(args: Array[String]) {
@@ -13,15 +13,26 @@ object EX316 {
     val l = List(1, 2, 3, 4, 5)
     val dl = List(1.0, 2.0, 3.0, 4.0, 5.0)
 
-    //EX314
+    //EX316
     println()
     println("EX316")
     println(addOneEach(l))
 
-    //EX315
+    //EX317
     println()
     println("EX317")
     println(doubleToString(dl))
+
+    //EX318
+    println()
+    println("EX318")
+    println(map(l)(_ + 1))
+
+    //EX319
+    println()
+    println("EX319")
+    println(filterOdd(l))
+    println(filterOdd(map(l)(_ + 1)))
 
   }
 }

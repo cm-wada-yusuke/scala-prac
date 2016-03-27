@@ -1,8 +1,8 @@
 package fp.datastuctures
 
 /**
-  * Created by y-wada on 2016/03/21.
-  */
+ * Created by y-wada on 2016/03/21.
+ */
 sealed trait List[+A]
 
 case object Nil extends List[Nothing]
@@ -28,41 +28,41 @@ object List {
 
 
   /**
-    * EX32.
-    * データ構造から考えて、2番目のリストの要素を返せば目的は達成できる。
-    *
-    * @param as
-    * @tparam A
-    * @return
-    */
+   * EX32.
+   * データ構造から考えて、2番目のリストの要素を返せば目的は達成できる。
+   *
+   * @param as
+   * @tparam A
+   * @return
+   */
   def tail[A](as: List[A]): List[A] = as match {
     case Nil => Nil
     case Cons(x, y) => y
   }
 
   /**
-    * EX33.
-    * 問の趣旨(matchを使う)から少し外れるかもしれないが、
-    * せっかくなので先のtail関数を使うことにする。
-    *
-    * @param head
-    * @param as
-    * @tparam A
-    * @return
-    */
+   * EX33.
+   * 問の趣旨(matchを使う)から少し外れるかもしれないが、
+   * せっかくなので先のtail関数を使うことにする。
+   *
+   * @param head
+   * @param as
+   * @tparam A
+   * @return
+   */
   def setHead[A](head: A, as: List[A]): List[A] =
     Cons(head, tail(as))
 
 
   /**
-    * EX34.
-    * リストの先頭あｋらn個の要素を削除する。
-    *
-    * @param l
-    * @param n
-    * @tparam A
-    * @return
-    */
+   * EX34.
+   * リストの先頭あｋらn個の要素を削除する。
+   *
+   * @param l
+   * @param n
+   * @tparam A
+   * @return
+   */
   def drop[A](l: List[A], n: Int): List[A] =
     if (n <= 0) l
     else l match {
@@ -71,14 +71,14 @@ object List {
     }
 
   /**
-    * EX35.
-    * fを満たす間lを削除する
-    *
-    * @param l
-    * @param f
-    * @tparam A
-    * @return
-    */
+   * EX35.
+   * fを満たす間lを削除する
+   *
+   * @param l
+   * @param f
+   * @tparam A
+   * @return
+   */
   def dropWhile[A](l: List[A], f: A => Boolean): List[A] = l match {
     case Nil => Nil
     case Cons(x, y) =>
@@ -87,13 +87,13 @@ object List {
   }
 
   /**
-    * リストの末尾とリストの先頭を紐付ける。
-    *
-    * @param a1
-    * @param a2
-    * @tparam A
-    * @return
-    */
+   * リストの末尾とリストの先頭を紐付ける。
+   *
+   * @param a1
+   * @param a2
+   * @tparam A
+   * @return
+   */
   def append[A](a1: List[A], a2: List[A]): List[A] =
     a1 match {
       case Nil => a2
@@ -101,18 +101,18 @@ object List {
     }
 
   /**
-    * EX36.
-    * リストの末尾（つまりNil）を発見するまでリストを捜査する必要がある。
-    * そのためO(N)の計算量になる。
-    * また、引数として与えられたリストのデータを共有することができず、
-    * 新しくリストを作成する必要がある。
-    *
-    * FIXME: case ( ) if g(x) =>
-    *
-    * @param l
-    * @tparam A
-    * @return
-    */
+   * EX36.
+   * リストの末尾（つまりNil）を発見するまでリストを捜査する必要がある。
+   * そのためO(N)の計算量になる。
+   * また、引数として与えられたリストのデータを共有することができず、
+   * 新しくリストを作成する必要がある。
+   *
+   * FIXME: case ( ) if g(x) =>
+   *
+   * @param l
+   * @tparam A
+   * @return
+   */
   def init[A](l: List[A]): List[A] = l match {
     case Nil => Nil
     case Cons(_, Nil) => Nil
@@ -132,11 +132,11 @@ object List {
 
 
   /**
-    * EX37. foldRightを使って実装されたproductは、0.0を検出した場合に直ちに再帰を中止して0.0を返すことはできない。
-    * 一度すべてのリストが展開されてすべての要素に関数fが適用されるため。
-    * すぐにおもいつくのは、ただちに終了する条件式を関数として指定させ、
-    * 満たさなくなった瞬間停止すること。引数が多くてなんだか美しくない…。
-    */
+   * EX37. foldRightを使って実装されたproductは、0.0を検出した場合に直ちに再帰を中止して0.0を返すことはできない。
+   * 一度すべてのリストが展開されてすべての要素に関数fが適用されるため。
+   * すぐにおもいつくのは、ただちに終了する条件式を関数として指定させ、
+   * 満たさなくなった瞬間停止すること。引数が多くてなんだか美しくない…。
+   */
   def foldRight2[A, B](as: List[A], z: B)(f: (A, B) => B)(e: B, g: A => Boolean): B = as match {
     case Nil => z
     case Cons(x, xs) if (g(x)) => println(s"immediately stop! found value: $x"); e
@@ -147,14 +147,14 @@ object List {
     foldRight2(ns, 1.0)(_ * _)(0.0, _ == 0)
 
   /**
-    * EX39.
-    */
+   * EX39.
+   */
   def length[A](as: List[A]): Int =
     foldRight(as, 0)((x, y) => 1 + y)
 
   /**
-    * EX310
-    */
+   * EX310
+   */
   def foldLeft[A, B](as: List[A], z: B)(f: (B, A) => B): B = as match {
     case Nil => z
     //    case Cons(x, xs) => f(foldLeft(xs, z)(f), x) // <- foldRightとかわんねぇことやってた
@@ -162,8 +162,8 @@ object List {
   }
 
   /**
-    * EX311
-    */
+   * EX311
+   */
   def sumL(l: List[Int]): Int =
     foldLeft(l, 0)(_ + _)
 
@@ -174,33 +174,61 @@ object List {
     foldLeft(l, 0)((y, x) => y + 1)
 
   /**
-    * EX312
-    */
+   * EX312
+   */
   def reverse[A](l: List[A]): List[A] =
     foldRight(l, Nil: List[A])((x, y) => append(y, Cons(x, Nil)))
 
 
   /**
-    * EX314.
-    * 初期値（つまりNilのかわり）にl2を与える。
-    */
+   * EX314.
+   * 初期値（つまりNilのかわり）にl2を与える。
+   */
   def appendFold[A](a1: List[A], a2: List[A]): List[A] =
     foldRight(a1, a2)(Cons(_, _))
 
   /**
-    * EX316.
-    */
+   * EX316.
+   */
   def addOneEach(l: List[Int]): List[Int] = l match {
     case Nil => Nil
     case Cons(x, xs) => Cons(x + 1, addOneEach(xs))
   }
 
   /**
-    * EX317.
-    */
+   * EX317.
+   */
   def doubleToString(l: List[Double]): List[String] = l match {
     case Nil => Nil
     case Cons(x, xs) => Cons(x.toString, doubleToString(xs))
+  }
+
+  /**
+   * EX318:map
+   */
+  def map[A, B](as: List[A])(f: A => B): List[B] = as match {
+    case Nil => Nil
+    case Cons(x, xs) => Cons(f(x), map(xs)(f))
+  }
+
+  /**
+   * EX319:filter
+   */
+  def filter[A](as: List[A])(f: A => Boolean): List[A] = as match {
+    case Nil => Nil
+    case Cons(x, xs) if (!f(x)) => filter(xs)(f)
+    case _ => as
+  }
+
+  /**
+   * EX319:filterOdd
+   */
+  def isEven(x: Int): Boolean = x % 2 == 0
+
+  def filterOdd(as: List[Int]): List[Int] = as match {
+    case Nil => Nil
+    case Cons(x, xs) if (isEven(x)) => Cons(x, filterOdd(filter(xs)(isEven)))
+    case Cons(x, xs) => filterOdd(filter(xs)(isEven))
   }
 
 }
