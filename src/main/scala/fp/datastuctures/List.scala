@@ -11,6 +11,8 @@ case class Cons[+A](head: A, tail: List[A]) extends List[A]
 
 object List {
 
+  implicit val print: Boolean = true
+
   def sum(ints: List[Int]): Int = ints match {
     case Nil => 0
     case Cons(x, xs) => x + sum(xs)
@@ -119,9 +121,9 @@ object List {
     case Cons(x, xs) => Cons(x, init(xs))
   }
 
-  def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B): B = as match {
+  def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B)(implicit print: Boolean): B = as match {
     case Nil => z
-    case Cons(x, xs) => f(x, foldRight(xs, z)(f))
+    case Cons(x, xs) => if (print) println(s"f(${ x }, foldRight(${ xs }, ${ z })(f))"); f(x, foldRight(xs, z)(f))
   }
 
   def sum2(ns: List[Int]) =
@@ -155,10 +157,9 @@ object List {
   /**
    * EX310
    */
-  def foldLeft[A, B](as: List[A], z: B)(f: (B, A) => B): B = as match {
+  def foldLeft[A, B](as: List[A], z: B)(f: (B, A) => B)(implicit print: Boolean): B = as match {
     case Nil => z
-    //    case Cons(x, xs) => f(foldLeft(xs, z)(f), x) // <- foldRightとかわんねぇことやってた
-    case Cons(x, xs) => foldLeft(xs, f(z, x))(f)
+    case Cons(x, xs) => if (print) println(s"foldLeft(${ xs }, f(${ z }, ${ x }))"); foldLeft(xs, f(z, x))(f)
   }
 
   /**
@@ -174,10 +175,31 @@ object List {
     foldLeft(l, 0)((y, x) => y + 1)
 
   /**
-   * EX312
+   * EX312.
+   * EX13のために、これを末尾再帰で実行したい。
+   * 最初に実装したやつ。末尾再帰ではない。
+   */
+  def reverse2[A](l: List[A]): List[A] =
+    foldRight(l, Nil: List[A])((x, y) => append(y, Cons(x, Nil)))
+
+  /**
+   * EX312.
+   * foldLeft版のreverse.末尾再帰関数で実装可能。
    */
   def reverse[A](l: List[A]): List[A] =
-    foldRight(l, Nil: List[A])((x, y) => append(y, Cons(x, Nil)))
+    foldLeft(l, Nil: List[A])((a2: List[A], a1: A) => Cons(a1, a2))
+
+  /**
+   * reverseもfoldLeftも末尾再帰。
+   */
+  def foldRightByFoldLeft[A, B](as: List[A], z: B)(f: (A, B) => B): B =
+    foldLeft(reverse(as), z)((b: B, a: A) => f(a, b))
+
+  /**
+   * foldRightができれば同じようにやるだけ。
+   */
+  def foldLeftByFoldRight[A, B](as: List[A], z: B)(f: (B, A) => B): B =
+    foldRight(reverse(as), z)((a: A, b: B) => f(b, a))
 
 
   /**
@@ -186,6 +208,7 @@ object List {
    */
   def appendFold[A](a1: List[A], a2: List[A]): List[A] =
     foldRight(a1, a2)(Cons(_, _))
+
 
   /**
    * EX316.

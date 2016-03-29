@@ -4,14 +4,15 @@ import fp.datastuctures.List._
 import fp.datastuctures._
 
 /**
-  * Created by y-wada on 2016/03/21.
-  */
+ * Created by y-wada on 2016/03/21.
+ */
 object EX3_ {
 
+
   /**
-    * EX31.
-    * 3つ目にマッチするので1 + 2 で3が返るはず。
-    */
+   * EX31.
+   * 3つ目にマッチするので1 + 2 で3が返るはず。
+   */
   val x = List(1, 2, 3, 4, 5) match {
     case Cons(x, Cons(2, Cons(4, _))) => x
     case Nil => 42
@@ -65,11 +66,11 @@ object EX3_ {
 
     //EX38
     /**
-      * NilとConsを与えるとコンストラクタで生成する結果（つまり入力したリストと同じ）結果になる。
-      * Listのデータ型がNilとConsであると考えると、
-      * Listコンストラクタは、foldRigtの初期値と構築するための関数をfoldRightに渡すことで
-      * コンストラクタを実装できることがいえる。両者は本質的に同じことをやっている。
-      */
+     * NilとConsを与えるとコンストラクタで生成する結果（つまり入力したリストと同じ）結果になる。
+     * Listのデータ型がNilとConsであると考えると、
+     * Listコンストラクタは、foldRigtの初期値と構築するための関数をfoldRightに渡すことで
+     * コンストラクタを実装できることがいえる。両者は本質的に同じことをやっている。
+     */
     println()
     println("EX38")
     println(s"foldRight to List")
@@ -90,12 +91,22 @@ object EX3_ {
 
     //EX312
     println()
-    print("EX312")
+    println("EX312")
     println(reverse(l))
+    println(reverse2(l))
+
+
+    //EX313
+    println()
+    println("EX313")
+    println(foldRightByFoldLeft(List(1, 2, 3), 0)(_ + _))
+    println(foldRight(List(1, 2, 3), 0)(_ + _))
+
 
     //EX314
     println()
-    print("EX314")
+    println("EX314")
     println(appendFold(l, l))
+
   }
 }
