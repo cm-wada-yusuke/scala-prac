@@ -10,10 +10,12 @@ object EX316 {
 
   def main(args: Array[String]) {
 
-    val s = List(1)
     val l = List(1, 2, 3, 4, 5)
     val l2 = List(1, 2, 3, 4, 5)
     val dl = List(1.0, 2.0, 3.0, 4.0, 5.0)
+
+    val s = List("a", "b", "c")
+    val s2 = List("d", "e", "f")
 
     //EX316
     println()
@@ -49,6 +51,11 @@ object EX316 {
     //EX322
     println()
     println("EX322")
-    println(str(zipWithAdd(l, l2)))
+    println(str(zipWithAdd(l, l2))) //EX322
+
+    //EX323
+    println()
+    println("EX323")
+    println(str(zipWith(s, s2)((a1, a2) => List(a1 + a2))))
   }
 }

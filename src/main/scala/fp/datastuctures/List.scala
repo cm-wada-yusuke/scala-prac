@@ -297,5 +297,11 @@ object List {
   def zipWithAdd(as1: List[Int], as2: List[Int]): List[Int] =
     flatMapWithIndex(as1) { (a1, index) => Cons(a1 + get(as2, index), Nil) }
 
+  /**
+   * 322で作成した関数を整数または加算に限定されないように一般化せよ。一般化された関数にはzipWithという名前をつけること。
+   */
+  def zipWith[A, B](as1: List[A], as2: List[A])(f: (A, A) => List[B]): List[B] =
+    flatMapWithIndex(as1) { (a1, index) => f(a1, get(as2, index)) }
+
 }
 
