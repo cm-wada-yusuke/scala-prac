@@ -29,6 +29,9 @@ object List {
     else Cons(as.head, apply(as.tail: _*))
 
 
+  def str[A](as: List[A]): String =
+    foldLeft(as, "[")((b: String, a: A) => b + a.toString) + "]"
+
   /**
    * EX32.
    * データ構造から考えて、2番目のリストの要素を返せば目的は達成できる。
@@ -229,30 +232,50 @@ object List {
   /**
    * EX318:map
    */
-  def map[A, B](as: List[A])(f: A => B): List[B] = as match {
+  def map2[A, B](as: List[A])(f: A => B): List[B] = as match {
     case Nil => Nil
     case Cons(x, xs) => Cons(f(x), map(xs)(f))
   }
 
+  def map[A, B](as: List[A])(f: A => B): List[B] =
+    foldRight(as, Nil: List[B])((a: A, b: List[B]) => Cons(f(a), b))
+
   /**
    * EX319:filter
    */
-  def filter[A](as: List[A])(f: A => Boolean): List[A] = as match {
+  def filterOld[A](as: List[A])(f: A => Boolean): List[A] = as match {
     case Nil => Nil
     case Cons(x, xs) if (!f(x)) => filter(xs)(f)
     case _ => as
   }
 
+
+  def filter[A](as: List[A])(f: A => Boolean): List[A] =
+    foldRight(as, Nil: List[A])((a: A, b: List[A]) => if (f(a)) Cons(a, b) else b)
+
   /**
    * EX319:filterOdd
    */
-  def isEven(x: Int): Boolean = x % 2 == 0
+  def filterOdd(as: List[Int]): List[Int] =
+    filter(as)(_ % 2 == 0)
 
-  def filterOdd(as: List[Int]): List[Int] = as match {
-    case Nil => Nil
-    case Cons(x, xs) if (isEven(x)) => Cons(x, filterOdd(filter(xs)(isEven)))
-    case Cons(x, xs) => filterOdd(filter(xs)(isEven))
-  }
+  //  def isEven(x: Int): Boolean = x % 2 == 0
+  //
+  //  def filterOdd(as: List[Int]): List[Int] = as match {
+  //    case Nil => Nil
+  //    case Cons(x, xs) if (isEven(x)) => Cons(x, filterOdd(filter(xs)(isEven)))
+  //    case Cons(x, xs) => filterOdd(filter(xs)(isEven))
+  //  }
 
+  /**
+   * EX320:flatMap
+   */
+  def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] =
+    foldRight(as, Nil: List[B])((a: A, b: List[B]) => append(f(a), b))
+
+  /**
+   * EX321:flatMapを使ってfilterを実装せよ。
+   */
+  
 }
 

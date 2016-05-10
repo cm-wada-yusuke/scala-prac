@@ -10,6 +10,7 @@ object EX316 {
 
   def main(args: Array[String]) {
 
+    val s = List(1)
     val l = List(1, 2, 3, 4, 5)
     val dl = List(1.0, 2.0, 3.0, 4.0, 5.0)
 
@@ -32,7 +33,11 @@ object EX316 {
     println()
     println("EX319")
     println(filterOdd(l))
-    println(filterOdd(map(l)(_ + 1)))
+    println(str(filterOdd(map(l)(_ + 1))))
 
+    //EX320
+    println()
+    println("EX320")
+    println(str(flatMap(l)(i => List(i, i))))
   }
 }
