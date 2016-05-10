@@ -11,7 +11,7 @@ case class Cons[+A](head: A, tail: List[A]) extends List[A]
 
 object List {
 
-  implicit val print: Boolean = true
+  implicit val print: Boolean = false
 
   def sum(ints: List[Int]): Int = ints match {
     case Nil => 0
@@ -30,7 +30,12 @@ object List {
 
 
   def str[A](as: List[A]): String =
-    foldLeft(as, "[")((b: String, a: A) => b + a.toString) + "]"
+    (foldLeft(as, "[")((b: String, a: A) => b + a.toString + " ")).trim + "]"
+
+  def head[A](as: List[A]): A = as match {
+    case Nil => throw new RuntimeException
+    case Cons(x, y) => x
+  }
 
   /**
    * EX32.
@@ -271,11 +276,26 @@ object List {
    * EX320:flatMap
    */
   def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] =
-    foldRight(as, Nil: List[B])((a: A, b: List[B]) => append(f(a), b))
+  //    foldRight(as, Nil: List[B])((a: A, b: List[B]) => append(f(a), b))
+    foldLeft(as, Nil: List[B])((b: List[B], a: A) => append(b, f(a)))
+
+  def flatMapWithIndex[A, B](as: List[A])(f: (A, Int) => List[B]): List[B] =
+    foldLeft(as, Nil: List[B])((b: List[B], a: A) => append(b, f(a, length(b))))
 
   /**
    * EX321:flatMapを使ってfilterを実装せよ。
    */
-  
+  def flatMapFilter[A](as: List[A])(f: A => Boolean): List[A] =
+    flatMap(as) { a: A => if (f(a)) Cons(a, Nil) else Nil }
+
+  /**
+   * リストをふたつ受け取り、対応する要素どうしを足しあわせて新しいリストを生成する関数を記述せよ。
+   * たとえばList(1,2,3)とList(4,5,6）はList(5,7,9)になる。
+   */
+  def get[A](xs: List[A], n: Int): A = head(drop(xs, n))
+
+  def zipWithAdd(as1: List[Int], as2: List[Int]): List[Int] =
+    flatMapWithIndex(as1) { (a1, index) => Cons(a1 + get(as2, index), Nil) }
+
 }
 

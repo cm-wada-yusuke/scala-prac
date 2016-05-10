@@ -12,6 +12,7 @@ object EX316 {
 
     val s = List(1)
     val l = List(1, 2, 3, 4, 5)
+    val l2 = List(1, 2, 3, 4, 5)
     val dl = List(1.0, 2.0, 3.0, 4.0, 5.0)
 
     //EX316
@@ -38,6 +39,16 @@ object EX316 {
     //EX320
     println()
     println("EX320")
-    println(str(flatMap(l)(i => List(i, i))))
+    println(str(flatMap(l)(i => List(i, i)))) //EX320
+
+    //EX321
+    println()
+    println("EX321")
+    println(str(flatMapFilter(l)((_ % 2 == 0))))
+
+    //EX322
+    println()
+    println("EX322")
+    println(str(zipWithAdd(l, l2)))
   }
 }
