@@ -1,4 +1,4 @@
-package fp
+package fp.output
 
 /**
   * Created by y-wada on 2016/03/21.

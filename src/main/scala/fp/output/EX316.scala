@@ -1,11 +1,11 @@
-package fp
+package fp.output
 
 import fp.datastuctures.List
 import fp.datastuctures.List._
 
 /**
- * Created by y-wada on 2016/03/24.
- */
+  * Created by y-wada on 2016/03/24.
+  */
 object EX316 {
 
   def main(args: Array[String]) {
