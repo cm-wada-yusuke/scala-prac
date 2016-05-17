@@ -10,12 +10,32 @@ object Tree {
 
   def main(args: Array[String]) {
 
-    val t = Branch(Branch(Leaf("a"), Leaf("b")),
+    val st = Branch(Branch(Leaf("a"), Leaf("b")),
       Branch(Leaf("c"), Leaf("d")))
+    val it = Branch(
+      Branch(Leaf(255), Leaf(0)),
+      Branch(Leaf(300), Leaf(-10)))
+
+    println(string(it))
 
     //EX325
     println()
-    println("EX316")
-    println(size(t))
+    println("EX325")
+    println(size(st))
+
+    //EX326
+    println()
+    println("EX326")
+    println(maximum(it))
+
+    //EX327
+    println()
+    println("EX327")
+    println(depth(it, 72))
+
+    //EX328
+    println()
+    println("EX328")
+    println(map(it)(_.toString.length))
   }
 }
