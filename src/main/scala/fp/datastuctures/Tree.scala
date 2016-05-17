@@ -57,6 +57,18 @@ object Tree {
   }
 
   def foldSize[A](t: Tree[A]): Int =
-    
+    fold(t)(_ => 1)(2 + _ + _)
+
+  def foldMaximum(t: Tree[Int]): Int =
+    fold(t)(v => v)((l, r) => l max r)
+
+  def foldDepth[A](t: Tree[A], s: A): Int = {
+    def loop(acc: Tree[A], depth: Int): Int =
+      fold(acc)(v => if (v == s) depth else 0)((l, r) => l max r)
+    loop(t, 0)
+  }
+
+  def foldMap[A, B](t: Tree[A])(f: A => B): Tree[B] =
+    fold(t)(v => Leaf(f(v)))((l, r) => Branch(l, r))
 
 }

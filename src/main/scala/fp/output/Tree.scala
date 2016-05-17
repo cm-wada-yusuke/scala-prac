@@ -37,5 +37,12 @@ object Tree {
     println()
     println("EX328")
     println(map(it)(_.toString.length))
+
+    //EX329
+    println()
+    println("EX329-foldSize")
+    println(foldSize(st))
+    println("EX329f-foldMaximum")
+    println(foldMaximum(it))
   }
 }
