@@ -1,11 +1,11 @@
 package fp.output
 
 import fp.datastuctures.Tree._
-import fp.datastuctures.{Branch, Leaf}
+import fp.datastuctures.{ Branch, Leaf }
 
 /**
-  * Created by wada.yusuke on 2016/05/16.
-  */
+ * Created by wada.yusuke on 2016/05/16.
+ */
 object Tree {
 
   def main(args: Array[String]) {
@@ -40,9 +40,13 @@ object Tree {
 
     //EX329
     println()
-    println("EX329-foldSize")
+    print("EX329-foldSize:")
     println(foldSize(st))
-    println("EX329f-foldMaximum")
+    print("EX329-foldMaximum:")
     println(foldMaximum(it))
+    print("EX329-foldDepth:")
+    println(foldDepth(it, 300))
+    print("EX329-foldMap:")
+    println(foldMap(it)(_.toString.length))
   }
 }

@@ -1,8 +1,8 @@
 package fp.datastuctures
 
 /**
-  * ツリー構造を表すトレイトとコンパニオンオブジェクト。
-  */
+ * ツリー構造を表すトレイトとコンパニオンオブジェクト。
+ */
 sealed trait Tree[+A]
 
 case class Leaf[A](value: A) extends Tree[A]
@@ -13,15 +13,15 @@ object Tree {
 
   def string[A](t: Tree[A]): String = {
     def printNode(acc: Tree[A]): String = acc match {
-      case Leaf(v) => s"[${v.toString}]"
-      case Branch(l, r) => "[ + ]" + s"${string(l)} ${string(r)}"
+      case Leaf(v) => s"[${ v.toString }]"
+      case Branch(l, r) => "[ + ]" + s"${ string(l) } ${ string(r) }"
     }
     printNode(t)
   }
 
   /**
-    * EX
-    */
+   * EX
+   */
   def size[A](t: Tree[A]): Int = t match {
     case Leaf(v) => 1
     case Branch(l, r) => (1 + size(l)) + (1 + size(r))
@@ -33,10 +33,10 @@ object Tree {
   }
 
   /**
-    * 二分木のルートから任意のLeafまでの最長パスを返すdepthを定義せよ。
-    * （複数ある場合はより大きい方を採用する。）
-    * （見つからない場合は0を返す）
-    */
+   * 二分木のルートから任意のLeafまでの最長パスを返すdepthを定義せよ。
+   * （複数ある場合はより大きい方を採用する。）
+   * （見つからない場合は0を返す）
+   */
   def depth[A](t: Tree[A], s: A): Int = {
     def loop(acc: Tree[A], depth: Int): Int = acc match {
       case Leaf(v) if s == v => depth
@@ -69,6 +69,6 @@ object Tree {
   }
 
   def foldMap[A, B](t: Tree[A])(f: A => B): Tree[B] =
-    fold(t)(v => Leaf(f(v)))((l, r) => Branch(l, r))
+    fold(t)(v => Leaf(f(v)): Tree[B])((l, r) => Branch(l, r))
 
 }
