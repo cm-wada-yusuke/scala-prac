@@ -306,6 +306,8 @@ object List {
   def zipWith[A, B](as1: List[A], as2: List[A])(f: (A, A) => List[B]): List[B] =
     flatMapWithIndex(as1) { (a1, index) => f(a1, get(as2, index)) }
 
+
+  // FIXME isSimilar実装してやってみる
   def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = {
     def loop(p: List[A], b: List[A]): Boolean = (p, b) match {
       case (Nil, Nil) => true
@@ -322,9 +324,6 @@ object List {
       case (Cons(h1, acc1), Cons(h2, acc2)) if (h1 == h2) => loop(acc1, acc2)
       case (Cons(h1, acc1), Cons(h2, acc2)) if (h1 != h2) => hasSubsequence(acc1, Cons(h2, acc2))
     }
-
   }
-
-
 }
 
