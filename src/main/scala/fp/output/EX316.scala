@@ -57,5 +57,11 @@ object EX316 {
     println()
     println("EX323")
     println(str(zipWith(s, s2)((a1, a2) => List(a1 + a2))))
+
+    //EX324
+    println()
+    println("EX324")
+    println(hasSubsequence(l, List(3, 4))) // must be true
+    println(hasSubsequence(l, List(3, 5))) // must be false
   }
 }
