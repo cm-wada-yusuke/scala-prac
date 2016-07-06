@@ -18,9 +18,11 @@ sealed trait Option[+A] {
 
   def orElse[B >: A](ob: => Option[B]): Option[B] = if (this == None) ob else this
 
+  def orElse2[B >: A](ob: => Option[B]): Option[B] = map(Some.apply) getOrElse ob
+
   def filter(f: A => Boolean): Option[A] = if (this.map(f).getOrElse(false)) this else None
 
-  //  def sequence[A](a: List[Option[A]]): Option[List[A]] = List.map(a)(_.getOrElse())
+  //  def sequence[A](a: List[Option[A]]): Option[List[A]] = List.map(a)(_.getOrElse()) 時間切れですわー
 
 }
 
@@ -31,7 +33,10 @@ case object None extends Option[Nothing]
 object Option {
 
   def variance(xs: Seq[Double]): Option[Double] =
-    if (xs.isEmpty) None else Some(xs.sum / xs.length).flatMap(a => Some(xs.map(e => Math.pow(e - a, 2)))).flatMap(as => Some(as.sum / as.length))
+    if (xs.isEmpty) None
+    else Some(xs.sum / xs.length)
+      .flatMap(a => Some(xs.map(e => Math.pow(e - a, 2))))
+      .flatMap(as => Some(as.sum / as.length))
 
   def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = (a, b) match {
     case (Some(x), Some(y)) => Some(f(x, y))
