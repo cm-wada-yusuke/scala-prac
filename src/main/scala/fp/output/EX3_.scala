@@ -1,7 +1,8 @@
 package fp.output
 
-import fp.datastuctures.List._
-import fp.datastuctures._
+import fp.datastuctures.list
+import fp.datastuctures.list.Cons
+import fp.datastuctures.list.List._
 
 /**
   * Created by y-wada on 2016/03/21.
@@ -13,9 +14,9 @@ object EX3_ {
     * EX31.
     * 3つ目にマッチするので1 + 2 で3が返るはず。
     */
-  val x = List(1, 2, 3, 4, 5) match {
+  val x = list.List(1, 2, 3, 4, 5) match {
     case Cons(x, Cons(2, Cons(4, _))) => x
-    case Nil => 42
+    case list.Nil => 42
     case Cons(x, Cons(y, Cons(3, Cons(4, _)))) => x + y
     case Cons(h, t) => h + sum(t)
     case _ => 101
@@ -29,7 +30,7 @@ object EX3_ {
     //EX32
     println()
     println("EX32")
-    val l = List(1, 2, 3, 4, 5)
+    val l = list.List(1, 2, 3, 4, 5)
     println(tail(l))
 
     //EX33
@@ -55,11 +56,11 @@ object EX3_ {
     //EX37
     println()
     println("EX37")
-    val l2 = List(1.0, 2.0, 3.0, 4.0, 5.0)
+    val l2 = list.List(1.0, 2.0, 3.0, 4.0, 5.0)
     println(s"$l2")
     println(product3(l2))
 
-    val l3 = List(1.0, 2.0, 0.0, 4.0, 5.0)
+    val l3 = list.List(1.0, 2.0, 0.0, 4.0, 5.0)
     println("EX37")
     println(s"$l3")
     println(product3(l3))
@@ -74,7 +75,7 @@ object EX3_ {
     println()
     println("EX38")
     println(s"foldRight to List")
-    println(foldRight(List(1, 2, 3), Nil: List[Int])(Cons(_, _)))
+    println(foldRight(list.List(1, 2, 3), list.Nil: list.List[Int])(Cons(_, _)))
 
     //EX38
     println()
@@ -99,8 +100,8 @@ object EX3_ {
     //EX313
     println()
     println("EX313")
-    println(foldRightByFoldLeft(List(1, 2, 3), 0)(_ + _))
-    println(foldRight(List(1, 2, 3), 0)(_ + _))
+    println(foldRightByFoldLeft(list.List(1, 2, 3), 0)(_ + _))
+    println(foldRight(list.List(1, 2, 3), 0)(_ + _))
 
 
     //EX314

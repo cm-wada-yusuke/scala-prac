@@ -29,13 +29,16 @@ trait Stream[+A] {
     case Cons(h, t) => Cons(h, () => t().take(n - 1))
   }
 
-  def drop(n: Int): Stream[A] = {
-    def loop[A](acc: Stream[A], n: Int): Stream[A] = acc match {
-      case Empty => Empty
-      case Cons(h, t) if n == 0 => acc
-      case Cons(h, t) => loop(t(), n - 1)
-    }
-    loop(this, n)
+  def drop(n: Int): Stream[A] = this match {
+    case Empty => Empty
+    case Cons(h, t) if n == 0 => t()
+    case Cons(h, t) => t().drop(n - 1)
+  }
+
+  def takeWhile(f: A => Boolean): Stream[A] = this match {
+    case Empty => Empty
+    case Cons(h, t) if !f(h()) => Cons(h, () => Empty)
+    case Cons(h, t) => Cons(h, () => t().takeWhile(f))
   }
 
 }
