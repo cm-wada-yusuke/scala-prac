@@ -34,6 +34,8 @@ case class Left[+E](value: E) extends Either[E, Nothing]
 case class Right[+A](value: A) extends Either[Nothing, A]
 
 object Either {
+
+  // TODO map2が使える
   def sequence[E, A](es: List[Either[E, A]]): Either[E, List[A]] =
     List.foldRight(es, Right(Nil): Either[E, List[A]])(
       (a, b) => (a, b) match {
@@ -44,6 +46,7 @@ object Either {
     )
 
 
+  //TODO f(a) map が使える
   def travers[E, A, B](as: List[A])(f: A => Either[E, B]): Either[E, List[B]] =
     List.foldRight(as, Right(Nil): Either[E, List[B]])(
       (a, b) => (a, b) match {
