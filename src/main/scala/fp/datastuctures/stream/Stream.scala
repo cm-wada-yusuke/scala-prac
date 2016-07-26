@@ -3,8 +3,8 @@ package fp.datastuctures.stream
 import scala.reflect.ClassTag
 
 /**
-  * 遅延リスト
-  */
+ * 遅延リスト
+ */
 trait Stream[+A] {
 
   def headOption = this match {
@@ -69,8 +69,8 @@ trait Stream[+A] {
   //    this.foldRight(a)((h, t) => Stream.cons(h, t))
 
   /**
-    * abstract type pattern A is unchecked since it is eliminated by erasure
-    */
+   * abstract type pattern A is unchecked since it is eliminated by erasure
+   */
   //  def append[B >: A : ClassTag](b: Stream[B]): Stream[B] =
   //    b.headOption match {
   //      case None => this
@@ -88,7 +88,24 @@ trait Stream[+A] {
   //    }
 
   def flatMap[B](f: A => Stream[B]): Stream[B] =
-    this.foldRight(Stream.empty[B])((a, b) => f(a).append(b))
+  this.foldRight(Stream.empty[B])((a, b) => f(a).append(b))
+
+  def unfoldMap[B](f: A => B): Stream[B] = ???
+
+  def unfoldTake(n: Int): Stream[A] = ???
+
+  def unfoldTakeWhile(f: A => Boolean): Stream[A] = ???
+
+  def zipWith[B](s2: Stream[B])(f: (A, B) => B): Stream[B] = ???
+
+  def zipAll[B](s2: Stream[B]): Stream[(Option[A], Option[B])] = ???
+
+  def startsWith[A](s: Stream[A]): Boolean = ???
+
+  def tails: Stream[Stream[A]] = ???
+
+  // scanRight
+  // Stream(1,2,3).scanRight(0)(_ + _ ) => List(6,5,3,0)
 
 }
 
@@ -111,7 +128,11 @@ object Stream {
 }
 
 object InfinityStream {
-  def constant[A](a: A): Stream[A] = Stream.cons(a, constant(a))
+
+  def constant[A](a: A): Stream[A] = {
+    lazy val tail: Stream[A] = Cons(() => a, () => tail)
+    tail
+  }
 
   def from(n: Int): Stream[Int] = Stream.cons(n, from(n + 1))
 
