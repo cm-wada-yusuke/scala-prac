@@ -90,19 +90,56 @@ trait Stream[+A] {
   def flatMap[B](f: A => Stream[B]): Stream[B] =
   this.foldRight(Stream.empty[B])((a, b) => f(a).append(b))
 
-  def unfoldMap[B](f: A => B): Stream[B] = ???
+  def unfoldMap[B](f: A => B): Stream[B] =
+    InfiniteStream.unfold(this) {
+      case Empty => None // 末尾まで来たら終了
+      case Cons(h, t) => Some((f(h()), t())) // 先頭にfを適用して次へ
+    }
 
-  def unfoldTake(n: Int): Stream[A] = ???
+  def unfoldTake(n: Int): Stream[A] =
+    InfiniteStream.unfold((n, this)) {
+      case (x, Cons(h, t)) if x > 0 => Some((h(), (x - 1, t()))) // x>0なら先頭を使って新ストリームを構築
+      case _ => None // それ以外は終了
+    }
 
-  def unfoldTakeWhile(f: A => Boolean): Stream[A] = ???
+  def unfoldTakeWhile(f: A => Boolean): Stream[A] =
+    InfiniteStream.unfold(this) {
+      case Cons(h, t) if f(h()) => Some((h(), t())) // 先頭がfを満たしていたらStream作成
+      case _ => None // それ以外は終了
+    }
 
-  def zipWith[B](s2: Stream[B])(f: (A, B) => B): Stream[B] = ???
+  def zipWith[B](s2: Stream[B])(f: (A, B) => B): Stream[B] =
+    InfiniteStream.unfold((this, s2)) {
+      case (Cons(h1, t1), Cons(h2, t2)) => Some((f(h1(), h2()), (t1(), t2()))) // どちらも先頭を持っている場合、それらを引数とするfを適用、次の状態は残りのストリームのタプル
+      case _ => None // どちらか片方のStreamが尽きた時点で終了
+    }
 
-  def zipAll[B](s2: Stream[B]): Stream[(Option[A], Option[B])] = ???
+  def zipAll[B](s2: Stream[B]): Stream[(Option[A], Option[B])] =
+    InfiniteStream.unfold((this, s2)) {
+      case (Cons(h1, t1), Cons(h2, t2)) => Some(((Some(h1()), Some(h2())), (t1(), t2()))) // Some(次の値,次の状態)どちらも要素を持ってる場合、それらを引数とするfを適用、次の状態は残りのストリームのタプル
+      case (Cons(h1, t1), Empty) => Some(((Some(h1()), None), (t1(), Stream.empty))) // 片方が空の場合、空側はNoneを返すようにし、残ったほうで続ける
+      case (Empty, Cons(h2, t2)) => Some(((None, Some(h2())), (Stream.empty, t2())))
+      case _ => None // 両方のStreamが尽きたら終了
+    }
 
-  def startsWith[A](s: Stream[A]): Boolean = ???
+  /**
+   * zipWithは、thisのほうが短い場合に対応できない（意図と反してtrueになってしまう場合がある）ため候補から外れた。
+   * falseを発見した瞬間に強制終了するfoldRightがポイントになる…はず。
+   */
+  def startsWith[B >: A](s: Stream[B]): Boolean =
+  zipAll(s).foldRight(true) {
+    case (_, false) => false // 一度falseになったらタプル値にかかわらず最後までfalse
+    case ((None, _), _) => false // thisが先に尽きてしまった場合はfalse
+    case ((Some(a), None), _) => true // thisのみの場合は次の調査へ進む
+    case ((Some(a), Some(b)), _) if a == b => true // どちらの要素もあり、かつ等しい場合次の調査へ進む
+    case ((Some(a), Some(b)), _) => false // 要素が一致しない瞬間調査終了
+  }
 
-  def tails: Stream[Stream[A]] = ???
+  def tails: Stream[Stream[A]] =
+    InfiniteStream.unfold(this) {
+      case Cons(h, t) => Some((Cons(h, t), t()))
+      case Empty => None
+    }
 
   // scanRight
   // Stream(1,2,3).scanRight(0)(_ + _ ) => List(6,5,3,0)
@@ -127,10 +164,10 @@ object Stream {
     else cons(as.head, apply(as.tail: _*))
 }
 
-object InfinityStream {
+object InfiniteStream {
 
-  def constant[A](a: A): Stream[A] = {
-    lazy val tail: Stream[A] = Cons(() => a, () => tail)
+  def constant[X](a: X): Stream[X] = {
+    lazy val tail: Stream[X] = Cons(() => a, () => tail)
     tail
   }
 
@@ -141,7 +178,7 @@ object InfinityStream {
     sub(0, 1)
   }
 
-  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = f(z) match {
+  def unfold[X, S](z: S)(f: S => Option[(X, S)]): Stream[X] = f(z) match {
     case None => Stream.empty
     case Some((v, s)) => Stream.cons(v, unfold(s)(f))
   }
@@ -150,7 +187,7 @@ object InfinityStream {
 
   def unfoldFrom(n: Int): Stream[Int] = unfold(n)(s => Some((s, s + 1)))
 
-  def unfoldConstant[A](a: A): Stream[A] = unfold(a)(s => Some((a, a)))
+  def unfoldConstant[X](a: X): Stream[X] = unfold(a)(s => Some((a, a)))
 
   def unfoldOnes: Stream[Int] = unfold(1)(s => Some((1, 1)))
 }
