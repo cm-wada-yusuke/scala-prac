@@ -55,6 +55,7 @@ object StreamOut {
 
 
     print("scanRight: ")
+    println(Stream(1, 2, 3, 4, 5).scanRight(0)(_ + _).toList)
 
 
   }
