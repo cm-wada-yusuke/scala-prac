@@ -1,4 +1,4 @@
-package fp.datastuctures
+package fp.datastuctures.list
 
 /**
   * Created by y-wada on 2016/03/21.
@@ -129,7 +129,7 @@ object List {
     case Cons(x, xs) => Cons(x, init(xs))
   }
 
-  def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B)(implicit print: Boolean): B = as match {
+  def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B): B = as match {
     case Nil => z
     case Cons(x, xs) => if (print) println(s"f(${x}, foldRight(${xs}, ${z})(f))"); f(x, foldRight(xs, z)(f))
   }
@@ -165,7 +165,7 @@ object List {
   /**
     * EX310
     */
-  def foldLeft[A, B](as: List[A], z: B)(f: (B, A) => B)(implicit print: Boolean): B = as match {
+  def foldLeft[A, B](as: List[A], z: B)(f: (B, A) => B): B = as match {
     case Nil => z
     case Cons(x, xs) => if (print) println(s"foldLeft(${xs}, f(${z}, ${x}))"); foldLeft(xs, f(z, x))(f)
   }
@@ -306,5 +306,24 @@ object List {
   def zipWith[A, B](as1: List[A], as2: List[A])(f: (A, A) => List[B]): List[B] =
     flatMapWithIndex(as1) { (a1, index) => f(a1, get(as2, index)) }
 
+
+  // FIXME isSimilar実装してやってみる
+  def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = {
+    def loop(p: List[A], b: List[A]): Boolean = (p, b) match {
+      case (Nil, Nil) => true
+      case (Cons(x, y), Nil) => true
+      case (Nil, Cons(x, y)) => false
+      case (Cons(h1, acc1), Cons(h2, acc2)) if (h1 == h2) => true && loop(acc1, acc2)
+      case (Cons(h1, acc1), Cons(h2, acc2)) if (h1 != h2) => false
+    }
+
+    (sup, sub) match {
+      case (Nil, Nil) => true
+      case (Cons(x, y), Nil) => true
+      case (Nil, Cons(x, y)) => false
+      case (Cons(h1, acc1), Cons(h2, acc2)) if (h1 == h2) => loop(acc1, acc2)
+      case (Cons(h1, acc1), Cons(h2, acc2)) if (h1 != h2) => hasSubsequence(acc1, Cons(h2, acc2))
+    }
+  }
 }
 

@@ -1,7 +1,7 @@
 package fp.output
 
-import fp.datastuctures.List
-import fp.datastuctures.List._
+import fp.datastuctures.list.List._
+import fp.datastuctures.list._
 
 /**
   * Created by y-wada on 2016/03/24.
@@ -57,5 +57,11 @@ object EX316 {
     println()
     println("EX323")
     println(str(zipWith(s, s2)((a1, a2) => List(a1 + a2))))
+
+    //EX324
+    println()
+    println("EX324")
+    println(hasSubsequence(l, List(3, 4))) // must be true
+    println(hasSubsequence(l, List(3, 5))) // must be false
   }
 }
