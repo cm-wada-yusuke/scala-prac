@@ -49,6 +49,7 @@ object StreamOut {
     print("startsWith: ")
     print(Stream(1, 2, 3, 4, 5).startsWith(Stream(6, 7, 8)))
     println(Stream(1, 2, 3, 4, 5).startsWith(Stream(1, 2, 3)))
+    // println(InfiniteStream.from(1).startsWith(Stream(1, 2, 3))) // !!!!!
 
     print("tails: ")
     println(Stream(1, 2, 3, 4, 5).tails.map(_.toList).toList)

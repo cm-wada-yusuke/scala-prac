@@ -96,11 +96,12 @@ trait Stream[+A] {
       case Cons(h, t) => Some((f(h()), t())) // 先頭にfを適用して次へ
     }
 
+  // TODO n == 1 にtailを評価しないよう最適化
   def unfoldTake(n: Int): Stream[A] =
-    InfiniteStream.unfold((n, this)) {
-      case (x, Cons(h, t)) if x > 0 => Some((h(), (x - 1, t()))) // x>0なら先頭を使って新ストリームを構築
-      case _ => None // それ以外は終了
-    }
+  InfiniteStream.unfold((n, this)) {
+    case (x, Cons(h, t)) if x > 0 => Some((h(), (x - 1, t()))) // x>0なら先頭を使って新ストリームを構築
+    case _ => None // それ以外は終了
+  }
 
   def unfoldTakeWhile(f: A => Boolean): Stream[A] =
     InfiniteStream.unfold(this) {
@@ -186,11 +187,12 @@ object InfiniteStream {
     case Some((v, s)) => Stream.cons(v, unfold(s)(f))
   }
 
+  // TODO パターンマッチで書く, BigIntにする
   def unfoldFibs: Stream[Int] = unfold((0, 1))(s => Some((s._1, (s._2, s._1 + s._2))))
 
   def unfoldFrom(n: Int): Stream[Int] = unfold(n)(s => Some((s, s + 1)))
 
   def unfoldConstant[X](a: X): Stream[X] = unfold(a)(s => Some((a, a)))
 
-  def unfoldOnes: Stream[Int] = unfold(1)(s => Some((1, 1)))
+  def unfoldOnes: Stream[Int] = unfold(1)(_ => Some((1, 1)))
 }
