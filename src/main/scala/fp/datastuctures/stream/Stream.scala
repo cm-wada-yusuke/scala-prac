@@ -138,9 +138,9 @@ trait Stream[+A] {
 
   def tails: Stream[Stream[A]] =
     InfiniteStream.unfold(this) {
-      case Cons(h, t) => Some((Cons(h, t), t()))
+      case s@Cons(_, t) => Some((s, t()))
       case Empty => None
-    }
+    }.append(Stream())
 
   def scanRight[B](z: B)(f: (A, => B) => B): Stream[B] =
     tails.map(_.foldRight(z)(f))

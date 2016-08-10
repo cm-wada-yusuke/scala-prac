@@ -60,9 +60,9 @@ object RNGOps {
     val (xs, last) = (0 until count).foldLeft((List.empty[Int], rng)) { (b, i) =>
       val (list, last) = b
       val (nextInt, nextRNG) = last.nextInt
-      (nextInt :: list, nextRNG)
+      (list ::: List(nextInt), nextRNG)
     }
-    (xs.reverse, last)
+    (xs, last)
   }
 
   type Rand[+A] = RNG => (A, RNG)
@@ -101,7 +101,14 @@ object RNGOps {
    * 遷移のListを1つの遷移にまとめるためのsequenceを実装せよ。それを使って、以前に記述したints関数を再実装せよ。
    * その際には、標準ライブラリのList.fill(n)(x)関数を使ってxをn回繰り返すリストを生成できる。
    */
-  def sequence[A](fs: List[Rand[A]]): Rand[List[A]] = ???
+  // fsをfoldLeftでRand[List[A]]に形を変えながら進む方針
+  // (b, a) => b では、map2を使う。(List[A], A, List[A]) => Rand(List[A]) とする。
+  def sequence[A](fs: List[Rand[A]]): Rand[List[A]] =
+  fs.foldLeft(unit(List.empty[A]))(map2[List[A], A, List[A]](_, _)(_ ::: List(_)))
+
+  // まず、List.fillでList[Rand[Int]]をつくる。
+  // 次に、そのListに対してsequenceを適用する。そうするとRand[List[Int]]が出来上がるので、ドミノだおしスタートのrngを渡してやる。
+  def sequenceInts(count: Int)(rng: RNG): (List[Int], RNG) = sequence(List.fill(count)(int))(rng)
 
 }
 
