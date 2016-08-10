@@ -25,6 +25,9 @@ object StateOut {
     println("ints:")
     println(RNGOps.ints(5)(rng))
 
+    println("sequenceInts:")
+    println(RNGOps.sequenceInts(5)(rng))
+
 
   }
 

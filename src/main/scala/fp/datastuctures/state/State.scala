@@ -35,7 +35,7 @@ object RNGOps {
 
 
   def double(rng: RNG): (Double, RNG) =
-    (nonNegativeInt(rng)._1.toDouble / Int.MaxValue.toDouble, rng.nextInt._2)
+    (nonNegativeInt(rng)._1.toDouble / (Int.MaxValue.toDouble + 1), rng.nextInt._2)
 
   def intDouble(rng: RNG): ((Int, Double), RNG) = {
     val (i, rng2) = nonNegativeInt(rng)
@@ -56,6 +56,7 @@ object RNGOps {
     ((d1, d2, d3), rng4)
   }
 
+  // FoldRightを使う
   def ints(count: Int)(rng: RNG): (List[Int], RNG) = {
     val (xs, last) = (0 until count).foldLeft((List.empty[Int], rng)) { (b, i) =>
       val (list, last) = b
@@ -81,7 +82,7 @@ object RNGOps {
     map(nonNegativeInt)(i => i - i % 2)
 
   def randDouble: Rand[Double] =
-    map(nonNegativeInt)(_.toDouble / Int.MaxValue.toDouble)
+    map(nonNegativeInt)(_.toDouble / (Int.MaxValue.toDouble + 1))
 
   def map2[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = rng => {
     val (a, rng2) = ra(rng)
@@ -101,14 +102,21 @@ object RNGOps {
    * 遷移のListを1つの遷移にまとめるためのsequenceを実装せよ。それを使って、以前に記述したints関数を再実装せよ。
    * その際には、標準ライブラリのList.fill(n)(x)関数を使ってxをn回繰り返すリストを生成できる。
    */
-  // fsをfoldLeftでRand[List[A]]に形を変えながら進む方針
+  // fsをfoldRightでRand[List[A]]に形を変えながら進む方針
   // (b, a) => b では、map2を使う。(List[A], A, List[A]) => Rand(List[A]) とする。
   def sequence[A](fs: List[Rand[A]]): Rand[List[A]] =
-  fs.foldLeft(unit(List.empty[A]))(map2[List[A], A, List[A]](_, _)(_ ::: List(_)))
+  fs.foldRight(unit(List.empty[A]))(map2[A, List[A], List[A]](_, _)(_ :: _))
 
   // まず、List.fillでList[Rand[Int]]をつくる。
   // 次に、そのListに対してsequenceを適用する。そうするとRand[List[Int]]が出来上がるので、ドミノだおしスタートのrngを渡してやる。
-  def sequenceInts(count: Int)(rng: RNG): (List[Int], RNG) = sequence(List.fill(count)(int))(rng)
+  def sequenceInts(count: Int)(rng: RNG): (List[Int], RNG) =
+  sequence(List.fill(count)(int))(rng)
+
+  // 要：テスト
+  def flatMap[A, B](f: Rand[A])(g: A => Rand[B]): Rand[B] = { rng =>
+    val (b, rng2) = map(f)(g)(rng)
+    b(rng2)
+  }
 
 }
 
