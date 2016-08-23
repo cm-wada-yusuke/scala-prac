@@ -29,6 +29,10 @@ object StateOut {
     println(RNGOps.sequenceInts(5)(rng))
 
 
+    println("nonNegativeLessThan:")
+    println(RNGOps.nonNegativeLessThan(31)(rng))
+
+
   }
 
   private def l[A](n: Int)(next: RNG)(f: RNG => (A, RNG)): Unit = n match {
