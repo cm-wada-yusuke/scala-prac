@@ -1,37 +1,51 @@
 package fp.datastuctures.state
 
-import scala.collection.immutable
 import scala.collection.immutable._
 
 //import fp.datastuctures.list
 //import fp.datastuctures.list._
 
 case class State[S, +A](run: S => (A, S)) {
+  def get: State[S, S] = State(s => (s, s))
 
+  def set(s: S): State[S, Unit] = State(_ => ((), s))
+
+  def modify(f: S => S): State[S, Unit] = for {
+    s <- get
+    _ <- set(f(s))
+  } yield ()
+
+  def sequence(fs: List[State[S, A]]): State[S, List[A]] =
+    fs.foldRight(State.unit(List.empty))(State.map2[A, List[A], List[A], S](_, _)(_ :: _))
 
 }
 
 object State {
-  type Rand[A] = State[RNG, A]
-  //    def unit[A](a: A): Rand[A] = rng => (a, rng)
-  //  def map[A, B](s: Rand[A])(f: A => B): Rand[B] = rng => {
-  //    val (a, rng2) = s(rng)
-  //    (f(a), rng2)
-  //  }
-  //
-  //  def map2[A, B, C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] = rng => {
-  //    val (a, rng2) = ra(rng)
-  //    val (b, rng3) = rb(rng2)
-  //    (f(a, b), rng3)
-  //  }
 
-  //  def sequence[A](fs: List[Rand[A]]): Rand[List[A]] =
-  //    fs.foldRight(unit(List.empty[A]))(map2[A, List[A], List[A]](_, _)(_ :: _))
-  //  def flatMap[A, B](f: Rand[A])(g: A => Rand[B]): Rand[B] = { rng =>
-  //    val (b, rng2) = map(f)(g)(rng)
-  //    b(rng2)
-  //  }
+  type State[S, +A] = S => (A, S)
+  type Rand[A] = State[RNG, A]
+
+
+  def unit[A, S](a: A): State[S, A] = state => (a, state)
+
+  def map[A, B, S](s: State[S, A])(f: A => B): State[S, B] = state => {
+    val (a, s2) = s(state)
+    (f(a), s2)
+  }
+
+  def map2[A, B, C, S](sa: State[S, A], sb: State[S, B])(f: (A, B) => C): State[S, C] = state => {
+    val (a, st2) = sa(state)
+    val (b, st3) = sb(st2)
+    (f(a, b), st3)
+  }
+
+  def flatMap[A, B, S](f: State[S, A])(g: A => State[S, B]): State[S, B] = { state =>
+    val (b, st2) = map(f)(g)(state)
+    b(st2)
+  }
+
 }
+
 
 trait RNG {
   def nextInt: (Int, RNG)
