@@ -27,6 +27,16 @@ object Collections {
       case s => s.substring(1)
     }
 
+  def map[T, U](list: List[T])(f: T => U): List[U] =
+    reverse(list.foldLeft(List.empty[U])((acc: List[U], t: T) => f(t) :: acc))
+
+  def filter[T](list: List[T])(f: T => Boolean): List[T] =
+    reverse(list.foldLeft(List.empty[T])((acc: List[T], t: T) => if (f(t)) t :: acc else acc))
+
+  def count[T](list: List[T])(f: T => Boolean): Int = list.foldLeft(0)((acc: Int, a: T) =>
+    acc + { if (f(a)) 1 else 0 }
+  )
+
   def main(args: Array[String]): Unit = {
     val arr = Array(1, 2, 3, 4, 5, 6)
     swapArray(arr)(1, 5)
@@ -53,6 +63,15 @@ object Collections {
     //空
     println(mkString(List())(";"))
     println(List().mkString(","))
+
+    // map
+    println(map(list)(a => a.toString))
+
+    //filter
+    println(filter(list)(a => a % 2 == 1))
+
+    // count
+    println(count(list)(a => a > 2))
 
   }
 
