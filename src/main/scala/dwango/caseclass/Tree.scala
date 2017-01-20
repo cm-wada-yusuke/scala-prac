@@ -16,6 +16,7 @@ object TreeExecutor {
     val t1 = Branch(10, Empty, Empty)
     val t2 = Branch(10, Branch(20, Empty, Empty), Empty)
     val t3 = Branch(10, Branch(20, Empty, Empty), Branch(30, Branch(40, Empty, Empty), Empty))
+    val t4 = Branch(34, Branch(52, Empty, Empty), Branch(11, Branch(5, Empty, Empty), Empty))
 
     println(depth(Empty))
     println(depth(t1))
@@ -23,6 +24,7 @@ object TreeExecutor {
     println(depth(t3))
 
     println(sort(t3))
+    println(sort(t4))
   }
 
   private def toList(tree: Tree): List[Int] = tree match {
