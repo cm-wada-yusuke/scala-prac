@@ -28,7 +28,6 @@ object TreeExecutor {
   }
 
   private def toList(tree: Tree): List[Int] = tree match {
-    case Branch(v, Empty, Empty) => List(v)
     case Branch(v, l: Tree, r: Tree) => v +: toList(l) ::: toList(r)
     case Empty => List.empty[Int]
   }
